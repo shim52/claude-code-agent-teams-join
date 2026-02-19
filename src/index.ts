@@ -29,7 +29,7 @@ if (arg === "--uninstall" || arg === "uninstall") {
 
 const server = new McpServer({
   name: "claude-team-join",
-  version: "1.1.0",
+  version: "1.2.0",
 });
 
 const toolHandlers = createToolHandlers(helpers);
