@@ -4,7 +4,7 @@ Rejoin orphaned Claude Code agent teams from a new session.
 
 ## The problem
 
-When your Claude Code session ends — terminal closed, crash, timeout — any agent teams it created become orphaned.
+When your Claude Code session ends - terminal closed, crash, timeout - any agent teams it created become orphaned.
 The team files stay on disk (`~/.claude/teams/`), but no session can lead them anymore.
 You lose your team setup, prompts, and member configs.
 
@@ -37,11 +37,11 @@ npx claude-team-join --uninstall
 
 Three tools become available to Claude Code:
 
-- **`list_teams`** — Shows all teams, their members, and whether the lead session is alive or stale.
+- **`list_teams`** - Shows all teams, their members, and whether the lead session is alive or stale.
 
-- **`team_join`** — Makes your current session the new lead of an orphaned team.
+- **`team_join`** - Makes your current session the new lead of an orphaned team.
 
-- **`get_team_members`** — Returns the full config (name, role, prompt, model) for each teammate so they can be re-spawned identically.
+- **`get_team_members`** - Returns the full config (name, role, prompt, model) for each teammate so they can be re-spawned identically.
 
 ## Usage
 
@@ -86,4 +86,4 @@ To test locally, point your Claude Code config at the local build:
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT - see [LICENSE](LICENSE) for details.
