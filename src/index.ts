@@ -101,6 +101,55 @@ function formatTimestamp(ts: number): string {
   return new Date(ts).toISOString().replace("T", " ").replace(/\.\d+Z$/, " UTC");
 }
 
+// --- CLI: --install / --uninstall ---
+
+const CLAUDE_CONFIG_PATH = path.join(os.homedir(), ".claude.json");
+const MCP_SERVER_KEY = "claude-team-join";
+
+function readClaudeConfig(): Record<string, any> {
+  try {
+    return JSON.parse(fs.readFileSync(CLAUDE_CONFIG_PATH, "utf-8"));
+  } catch {
+    return {};
+  }
+}
+
+function writeClaudeConfig(config: Record<string, any>): void {
+  fs.writeFileSync(CLAUDE_CONFIG_PATH, JSON.stringify(config, null, 2) + "\n", "utf-8");
+}
+
+function handleInstall(): never {
+  const config = readClaudeConfig();
+  if (!config.mcpServers) config.mcpServers = {};
+
+  config.mcpServers[MCP_SERVER_KEY] = {
+    type: "stdio",
+    command: "npx",
+    args: ["-y", "claude-team-join"],
+  };
+
+  writeClaudeConfig(config);
+  console.log("✓ Added claude-team-join to ~/.claude.json");
+  console.log("  Restart Claude Code to pick up the new MCP server.");
+  process.exit(0);
+}
+
+function handleUninstall(): never {
+  const config = readClaudeConfig();
+  if (config.mcpServers?.[MCP_SERVER_KEY]) {
+    delete config.mcpServers[MCP_SERVER_KEY];
+    writeClaudeConfig(config);
+    console.log("✓ Removed claude-team-join from ~/.claude.json");
+  } else {
+    console.log("claude-team-join is not configured in ~/.claude.json");
+  }
+  process.exit(0);
+}
+
+const arg = process.argv[2];
+if (arg === "--install" || arg === "install") handleInstall();
+if (arg === "--uninstall" || arg === "uninstall") handleUninstall();
+
 // --- MCP Server ---
 
 const server = new McpServer({

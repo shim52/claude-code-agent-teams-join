@@ -18,9 +18,23 @@ This MCP server gives your Claude Code session the tools to discover those orpha
 
 ## Installation
 
-Add to your Claude Code MCP config at `~/.claude.json`:
+### One-liner (recommended)
 
-### Using npx (recommended)
+```bash
+npx claude-team-join --install
+```
+
+This automatically adds the MCP server config to your `~/.claude.json`. Restart Claude Code to pick it up.
+
+To remove it later:
+
+```bash
+npx claude-team-join --uninstall
+```
+
+### Manual
+
+Add to `~/.claude.json`:
 
 ```json
 {
@@ -29,20 +43,6 @@ Add to your Claude Code MCP config at `~/.claude.json`:
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "claude-team-join"]
-    }
-  }
-}
-```
-
-### Local development
-
-```json
-{
-  "mcpServers": {
-    "claude-team-join": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["/path/to/claude-team-join/dist/index.js"]
     }
   }
 }
