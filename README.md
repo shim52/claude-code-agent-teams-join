@@ -4,7 +4,9 @@ Rejoin orphaned Claude Code agent teams from a new session.
 
 ## The problem
 
-When your Claude Code session ends — terminal closed, crash, timeout — any agent teams it created become orphaned. The team files stay on disk (`~/.claude/teams/`), but no session can lead them anymore. You lose your team setup, prompts, and member configs.
+When your Claude Code session ends - terminal closed, crash, timeout — any agent teams it created become orphaned. 
+The team files stay on disk (`~/.claude/teams/`), but no session can lead them anymore. 
+You lose your team setup, prompts, and member configs.
 
 **claude-team-join** is an MCP server that lets Claude Code discover those orphaned teams, take over as lead, and re-spawn the teammates exactly as they were.
 
