@@ -1,0 +1,44 @@
+{
+  "name": "claude-team-join",
+  "version": "1.0.0",
+  "description": "MCP server for listing, inspecting, and rejoining orphaned Claude Code teams",
+  "main": "dist/index.js",
+  "bin": {
+    "claude-team-join": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "keywords": [
+    "claude-code",
+    "mcp",
+    "team",
+    "agent"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shim52/claude-code-agent-teams-join.git"
+  },
+  "author": "shim52",
+  "homepage": "https://github.com/shim52/claude-code-agent-teams-join#readme",
+  "bugs": {
+    "url": "https://github.com/shim52/claude-code-agent-teams-join/issues"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist"
+  ]
+}
