@@ -1,81 +1,70 @@
 # claude-team-join
 
-MCP server for listing, inspecting, and rejoining orphaned Claude Code agent teams.
+Rejoin orphaned Claude Code agent teams from a new session.
 
-## Problem
+## The problem
 
-When a Claude Code session ends (terminal closed, crash, timeout), any teams created during that session become orphaned. The team config files persist in `~/.claude/teams/`, but the lead session ID points to a dead session — so no new agent can take over as team lead or re-spawn teammates.
+When your Claude Code session ends — terminal closed, crash, timeout — any agent teams it created become orphaned. The team files stay on disk (`~/.claude/teams/`), but no session can lead them anymore. You lose your team setup, prompts, and member configs.
 
-This MCP server gives your Claude Code session the tools to discover those orphaned teams and rejoin them as the new lead.
+**claude-team-join** is an MCP server that lets Claude Code discover those orphaned teams, take over as lead, and re-spawn the teammates exactly as they were.
 
-## Tools
+## Install
 
-| Tool | Description |
-|------|-------------|
-| `list_teams` | List all teams in `~/.claude/teams/` with their status, members, and whether the lead session is stale or current |
-| `team_join` | Rejoin an existing team by updating its config to point to the current session. Makes you the new team lead and resets all members to inactive |
-| `get_team_members` | Get full teammate definitions (name, role, prompt, model) so they can be re-spawned with the Task tool using identical configurations |
-
-## Installation
-
-### One-liner (recommended)
+Run this in your terminal:
 
 ```bash
 npx claude-team-join --install
 ```
 
-This automatically adds the MCP server config to your `~/.claude.json`. Restart Claude Code to pick it up.
+Then restart Claude Code (close and reopen, or run `claude` again).
 
-To remove it later:
+That's it. The tools are now available in every Claude Code session.
 
-```bash
-npx claude-team-join --uninstall
+> To uninstall: `npx claude-team-join --uninstall`
+
+## What you get
+
+Three tools become available to Claude Code:
+
+| Tool | What it does |
+|---|---|
+| **list_teams** | Shows all teams, their members, and whether the lead session is alive or stale |
+| **team_join** | Makes your current session the new lead of an orphaned team |
+| **get_team_members** | Returns the full config (name, role, prompt, model) for each teammate so they can be re-spawned identically |
+
+## How to use
+
+Once installed, just tell Claude Code what you need in plain English:
+
+```
+"Show me my orphaned teams"
+"Rejoin the my-project team"
+"Re-spawn all the teammates from my-project"
 ```
 
-### Manual
+Claude Code will use the tools automatically.
 
-Add to `~/.claude.json`:
+## Contributing
+
+```bash
+git clone https://github.com/shim52/claude-code-agent-teams-join.git
+cd claude-code-agent-teams-join
+npm install
+npm run build
+```
+
+To test locally, point your `~/.claude.json` at the local build:
 
 ```json
 {
   "mcpServers": {
     "claude-team-join": {
       "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "claude-team-join"]
+      "command": "node",
+      "args": ["/absolute/path/to/claude-code-agent-teams-join/dist/index.js"]
     }
   }
 }
-```
-
-## Usage
-
-Once installed, Claude Code can use the tools directly. A typical workflow:
-
-1. **List teams** to see what's available and which are orphaned:
-   ```
-   Use the list_teams tool to see all teams
-   ```
-
-2. **Join a team** to become its new lead:
-   ```
-   Use team_join with team_name "my-project" to rejoin
-   ```
-
-3. **Get member configs** to re-spawn teammates:
-   ```
-   Use get_team_members for "my-project" to get teammate definitions, then re-spawn them with the Task tool
-   ```
-
-## Development
-
-```bash
-git clone git@github.com:shim52/claude-code-agent-teams-join.git
-cd claude-code-agent-teams-join
-npm install
-npm run build    # compile TypeScript to dist/
-npm run dev      # run with tsx (hot reload)
-npm start        # run compiled output
 ```
 
 ## License
