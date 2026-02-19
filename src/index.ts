@@ -45,7 +45,7 @@ server.tool(
   "team_join",
   "Rejoin an existing team by updating its config to point to the current session. This makes you the new team lead.",
   {
-    team_name: z.string().describe("Name of the team to rejoin"),
+    team_name: z.string().regex(/^[a-zA-Z0-9_\- ]+$/).describe("Name of the team to rejoin"),
   },
   toolHandlers.teamJoin
 );
@@ -54,7 +54,7 @@ server.tool(
   "get_team_members",
   "Get full teammate definitions (name, role, prompt, model) so they can be re-spawned with the Task tool using identical configurations",
   {
-    team_name: z.string().describe("Name of the team to get members from"),
+    team_name: z.string().regex(/^[a-zA-Z0-9_\- ]+$/).describe("Name of the team to get members from"),
   },
   toolHandlers.getTeamMembers
 );

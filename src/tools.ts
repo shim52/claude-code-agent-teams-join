@@ -10,7 +10,7 @@ export function createToolHandlers(helpers: Helpers) {
           content: [
             {
               type: "text" as const,
-              text: "No teams found in ~/.claude/teams/",
+              text: `No teams found in ${helpers.TEAMS_DIR}`,
             },
           ],
         };
@@ -77,7 +77,7 @@ export function createToolHandlers(helpers: Helpers) {
           content: [
             {
               type: "text" as const,
-              text: "Error: Could not detect current session ID from ~/.claude/session-env/",
+              text: `Error: Could not detect current session ID from ${helpers.SESSION_ENV_DIR}`,
             },
           ],
           isError: true,

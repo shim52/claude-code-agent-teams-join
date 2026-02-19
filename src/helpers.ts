@@ -28,6 +28,10 @@ export interface TeamConfig {
   members: TeamMember[];
 }
 
+function isValidTeamName(name: string): boolean {
+  return name.length > 0 && !/[\/\\]|\.\./.test(name);
+}
+
 export function createHelpers(homeDir: string) {
   const CLAUDE_DIR = path.join(homeDir, ".claude");
   const TEAMS_DIR = path.join(CLAUDE_DIR, "teams");
@@ -46,6 +50,9 @@ export function createHelpers(homeDir: string) {
   }
 
   function readTeamConfig(teamName: string): TeamConfig | null {
+    if (!isValidTeamName(teamName)) {
+      return null;
+    }
     const configPath = path.join(TEAMS_DIR, teamName, "config.json");
     try {
       const raw = fs.readFileSync(configPath, "utf-8");
@@ -55,12 +62,20 @@ export function createHelpers(homeDir: string) {
         return null;
       }
       return parsed as TeamConfig;
-    } catch {
+    } catch (err: unknown) {
+      if (err instanceof Error && "code" in err && (err as NodeJS.ErrnoException).code === "ENOENT") {
+        return null;
+      }
+      // Log non-ENOENT errors (e.g. permission denied) so they aren't silently lost
+      process.stderr.write(`Warning: failed to read team config for "${teamName}": ${err instanceof Error ? err.message : String(err)}\n`);
       return null;
     }
   }
 
   function writeTeamConfig(teamName: string, config: TeamConfig): void {
+    if (!isValidTeamName(teamName)) {
+      throw new Error(`Invalid team name: "${teamName}"`);
+    }
     const configPath = path.join(TEAMS_DIR, teamName, "config.json");
     fs.writeFileSync(configPath, JSON.stringify(config, null, 4), "utf-8");
   }

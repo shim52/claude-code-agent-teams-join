@@ -46,10 +46,7 @@ describe("edge cases", () => {
     expect((membersResult as any).isError).toBeUndefined();
   });
 
-  it("team name with ../ doesn't escape teams directory", () => {
-    // readTeamConfig with path traversal should not read outside teams dir
-    // It constructs: TEAMS_DIR / "../escape" / config.json
-    // which resolves to CLAUDE_DIR / "escape" / config.json
+  it("team name with ../ is rejected", () => {
     const escapeDir = path.join(testHome, ".claude", "escape");
     fs.mkdirSync(escapeDir, { recursive: true });
     fs.writeFileSync(
@@ -57,11 +54,9 @@ describe("edge cases", () => {
       JSON.stringify(makeTeamConfig({ name: "escaped" }))
     );
 
-    // This documents that path traversal IS possible with the current implementation.
-    // The test verifies the behavior — it will read outside the teams dir.
+    // Path traversal is blocked by team name validation
     const result = helpers.readTeamConfig("../escape");
-    // Document: this DOES work (potential security concern for future hardening)
-    expect(result).not.toBeNull();
+    expect(result).toBeNull();
   });
 
   it("empty team name returns null", () => {

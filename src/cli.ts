@@ -33,7 +33,7 @@ export function handleInstall(configPath: string): { success: boolean; message: 
 
   return {
     success: true,
-    message: "Added claude-team-join to ~/.claude.json\n  Restart Claude Code to pick up the new MCP server.",
+    message: `Added claude-team-join to ${configPath}\n  Restart Claude Code to pick up the new MCP server.`,
   };
 }
 
@@ -46,7 +46,7 @@ export function handleUninstall(configPath: string): { success: boolean; message
   } catch {
     return {
       success: true,
-      message: "claude-team-join is not configured in ~/.claude.json",
+      message: `claude-team-join is not configured in ${configPath}`,
     };
   }
 
@@ -55,12 +55,12 @@ export function handleUninstall(configPath: string): { success: boolean; message
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n", "utf-8");
     return {
       success: true,
-      message: "Removed claude-team-join from ~/.claude.json",
+      message: `Removed claude-team-join from ${configPath}`,
     };
   }
 
   return {
     success: true,
-    message: "claude-team-join is not configured in ~/.claude.json",
+    message: `claude-team-join is not configured in ${configPath}`,
   };
 }
