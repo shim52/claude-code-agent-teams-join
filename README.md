@@ -10,7 +10,7 @@ The team files stay on disk (`~/.claude/teams/`), but no session can lead them a
 
 You lose your team setup, prompts, and member configs.
 
-**claude-team-join** is an MCP server that lets Claude Code discover those orphaned teams, take over as lead, and re-spawn the teammates exactly as they were.
+**claude-team-join** installs skills that let Claude Code discover those orphaned teams, take over as lead, and re-spawn the teammates exactly as they were.
 
 ## Requirements
 
@@ -27,7 +27,7 @@ npx claude-team-join --install
 
 Then restart Claude Code (close and reopen, or run `claude` again).
 
-That's it. The tools are now available in every Claude Code session.
+That's it. The skills are now available in every Claude Code session.
 
 To uninstall:
 
@@ -37,25 +37,25 @@ npx claude-team-join --uninstall
 
 ## What you get
 
-Three tools become available to Claude Code:
+Three skills are installed to `~/.claude/skills/`:
 
-- **`list_teams`** - Shows all teams, their members, and whether the lead session is alive or stale.
+- **`team-join`** - Rejoins an orphaned team by making your current session the new lead.
 
-- **`team_join`** - Makes your current session the new lead of an orphaned team.
+- **`team-list`** - Shows all teams, their members, and whether the lead session is alive or stale.
 
-- **`get_team_members`** - Returns the full config (name, role, prompt, model) for each teammate so they can be re-spawned identically.
+- **`team-members`** - Returns the full config (name, role, prompt, model) for each teammate so they can be re-spawned identically.
 
 ## Usage
 
 Once installed, just tell Claude Code what you need in plain English:
 
 ```
-"Show me my orphaned teams"
 "Rejoin the my-project team"
+"Show me my orphaned teams"
 "Re-spawn all the teammates from my-project"
 ```
 
-Claude Code will use the tools automatically.
+Claude Code will match the appropriate skill automatically.
 
 ## Contributing
 
@@ -72,19 +72,13 @@ Run tests:
 npm test
 ```
 
-To test locally, point your Claude Code config at the local build:
+To test locally:
 
-```json
-{
-  "mcpServers": {
-    "claude-team-join": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["/absolute/path/to/claude-code-agent-teams-join/dist/index.js"]
-    }
-  }
-}
+```bash
+node dist/index.js --install
 ```
+
+Then restart Claude Code and try commands like "rejoin the my-team team".
 
 ## License
 

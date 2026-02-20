@@ -1,66 +1,40 @@
 import * as fs from "fs";
+import * as path from "path";
+import { SKILLS } from "./skills.js";
 
-const MCP_SERVER_KEY = "claude-team-join";
+export function handleInstall(skillsDir: string): { success: boolean; message: string } {
+  fs.mkdirSync(skillsDir, { recursive: true });
 
-export function handleInstall(configPath: string): { success: boolean; message: string } {
-  let config: Record<string, any>;
+  const installed: string[] = [];
 
-  try {
-    const raw = fs.readFileSync(configPath, "utf-8");
-    try {
-      config = JSON.parse(raw);
-    } catch {
-      // File exists but contains malformed JSON — do NOT overwrite
-      return {
-        success: false,
-        message: `Error: ${configPath} contains malformed JSON. Fix it manually before running --install.`,
-      };
-    }
-  } catch {
-    // File doesn't exist — start fresh
-    config = {};
+  for (const skill of SKILLS) {
+    const dir = path.join(skillsDir, skill.dirName);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, "SKILL.md"), skill.content, "utf-8");
+    installed.push(skill.dirName);
   }
-
-  if (!config.mcpServers) config.mcpServers = {};
-
-  config.mcpServers[MCP_SERVER_KEY] = {
-    type: "stdio",
-    command: "npx",
-    args: ["-y", "claude-team-join"],
-  };
-
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n", "utf-8");
 
   return {
     success: true,
-    message: `Added claude-team-join to ${configPath}\n  Restart Claude Code to pick up the new MCP server.`,
+    message: `Installed skills to ${skillsDir}: ${installed.join(", ")}\n  Restart Claude Code to pick up the new skills.`,
   };
 }
 
-export function handleUninstall(configPath: string): { success: boolean; message: string } {
-  let config: Record<string, any>;
+export function handleUninstall(skillsDir: string): { success: boolean; message: string } {
+  const removed: string[] = [];
 
-  try {
-    const raw = fs.readFileSync(configPath, "utf-8");
-    config = JSON.parse(raw);
-  } catch {
-    return {
-      success: true,
-      message: `claude-team-join is not configured in ${configPath}`,
-    };
-  }
-
-  if (config.mcpServers?.[MCP_SERVER_KEY]) {
-    delete config.mcpServers[MCP_SERVER_KEY];
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2) + "\n", "utf-8");
-    return {
-      success: true,
-      message: `Removed claude-team-join from ${configPath}`,
-    };
+  for (const skill of SKILLS) {
+    const dir = path.join(skillsDir, skill.dirName);
+    if (fs.existsSync(dir)) {
+      fs.rmSync(dir, { recursive: true, force: true });
+      removed.push(skill.dirName);
+    }
   }
 
   return {
     success: true,
-    message: `claude-team-join is not configured in ${configPath}`,
+    message: removed.length > 0
+      ? `Removed skills from ${skillsDir}: ${removed.join(", ")}`
+      : `No claude-team-join skills found in ${skillsDir}`,
   };
 }
